@@ -68,6 +68,8 @@ if !isdirectory(target_path)
 endif
 let &undodir = target_path
 set undofile
+
+set ic
 ]])
 
 require("user.lazy")

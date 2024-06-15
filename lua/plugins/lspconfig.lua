@@ -2,8 +2,10 @@ return {
 	{ "neovim/nvim-lspconfig", dependencies = {
 		'hrsh7th/cmp-nvim-lsp', 'hrsh7th/cmp-buffer',
 		'hrsh7th/cmp-path', 'hrsh7th/cmp-cmdline', 'hrsh7th/nvim-cmp',
-		'L3MON4D3/LuaSnip', 'saadparwaiz1/cmp_luasnip'
-	}, ft = {'c', 'cpp' }, config = function()
+		'L3MON4D3/LuaSnip', 'saadparwaiz1/cmp_luasnip',
+		'williamboman/mason.nvim', 'williamboman/mason-lspconfig.nvim'
+	}, ft = {'c', 'cpp', 'lua', 'python', 'html', 'css', 'javascript',
+	'htmldjango' }, config = function()
 		local cmp = require('cmp')
 
 		cmp.setup({snippet = {
@@ -28,9 +30,58 @@ return {
 		}, {
 			{ name = 'buffer' }
 		})})
+
+		require("mason").setup()
+		require("mason-lspconfig").setup()
+
+		local langservers = {
+			'clangd', 'html', 'cssls', 'jinja_lsp', 'tsserver',
+			'pyright', 'lua_ls'
+		}
+
 		local c = require('cmp_nvim_lsp').default_capabilities()
-		require('lspconfig').clangd.setup({
-			capabilities = c
-		})
+
+		for _,server in pairs(langservers) do
+			require('lspconfig')[server].setup({
+				capabilities = c,
+				on_attach = function(client)
+					local csc = client.server_capabilities
+					csc.semanticTokensProvider = nil
+				end
+			})
+		end
+
+		require'lspconfig'.lua_ls.setup {
+			on_init = function(client)
+				local vlf = vim.loop.fs_stat
+				local ccl = client.config.settings.Lua
+				local tde = vim.tbl_deep_extend
+
+				local path = client.workspace_folders[1].name
+				if vlf(path..'/.luarc.json') or
+					vlf(path..'/.luarc.jsonc') then return
+				end
+
+				ccl = tde('force', ccl, {
+					runtime = {
+						version = 'LuaJIT'
+					},
+					workspace = {
+						checkThirdParty = false,
+						library = {
+							vim.env.VIMRUNTIME
+						}
+					}
+				})
+			end,
+			settings = {
+				Lua = {
+					diagnostics = {
+						globals =
+							{ 'vim', 'cmp_select'}
+					}
+				}
+			}
+		}
 	end }
 }
