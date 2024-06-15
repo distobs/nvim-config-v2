@@ -36,7 +36,7 @@ return {
 
 		local langservers = {
 			'clangd', 'html', 'cssls', 'jinja_lsp', 'tsserver',
-			'pyright', 'lua_ls'
+			'pyright'
 		}
 
 		local c = require('cmp_nvim_lsp').default_capabilities()
@@ -52,6 +52,11 @@ return {
 		end
 
 		require'lspconfig'.lua_ls.setup {
+			capabilities = c,
+			on_attach = function(client)
+				local csc = client.server_capabilities
+				csc.semanticTokensProvider = nil
+			end,
 			on_init = function(client)
 				local vlf = vim.loop.fs_stat
 				local ccl = client.config.settings.Lua
@@ -78,7 +83,7 @@ return {
 				Lua = {
 					diagnostics = {
 						globals =
-							{ 'vim', 'cmp_select'}
+						{ 'vim', 'cmp_select'}
 					}
 				}
 			}
