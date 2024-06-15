@@ -21,9 +21,7 @@ autocmd BufWinLeave * call clearmatches()
 set ts=8 sw=8 sts=8 cc=80 tw=80
 autocmd BufEnter *.html set ts=4 sts=4 sw=4
 
-" Mappings
 let g:mapleader=","
-
 "" Window commands
 "" Some useful ones:
 "" cw + and cw -: increase and decrease window height.
@@ -68,8 +66,8 @@ if !isdirectory(target_path)
 endif
 let &undodir = target_path
 set undofile
-
-set ic
+set nohlsearch
 ]])
 
 require("user.lazy")
+require("user.keymaps")
