@@ -1,3 +1,5 @@
+-- let me copy-paste!!!!
+-- https://github.com/neovim/nvim-lspconfig/commit/b972e7154bc94ab4ecdbb38c8edbccac36f83996
 vim.api.nvim_create_autocmd('LspAttach', {
 	callback = function(ev)
 		local v = vim.keymap.set
