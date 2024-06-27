@@ -67,6 +67,9 @@ endif
 let &undodir = target_path
 set undofile
 set nohlsearch
+
+" colorscheme
+colo delek
 ]])
 
 require("user.lazy")

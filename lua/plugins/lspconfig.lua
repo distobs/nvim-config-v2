@@ -3,7 +3,8 @@ return {
 		'hrsh7th/cmp-nvim-lsp', 'hrsh7th/cmp-buffer',
 		'hrsh7th/cmp-path', 'hrsh7th/cmp-cmdline', 'hrsh7th/nvim-cmp',
 		'L3MON4D3/LuaSnip', 'saadparwaiz1/cmp_luasnip',
-		'williamboman/mason.nvim', 'williamboman/mason-lspconfig.nvim'
+		'williamboman/mason.nvim', 'williamboman/mason-lspconfig.nvim',
+		'stevearc/aerial.nvim'
 	}, ft = {'c', 'cpp', 'lua', 'python', 'html', 'css', 'javascript',
 	'htmldjango' }, config = function()
 		local cmp = require('cmp')
@@ -88,5 +89,12 @@ return {
 				}
 			}
 		}
+
+		require('aerial').setup({
+			on_attach = function()
+				vim.keymap.set("n", "<leader>a",
+				"<cmd>AerialToggle!<CR>")
+			end
+		})
 	end }
 }
